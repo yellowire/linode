@@ -1,10 +1,10 @@
-#!/usr/bin/python3.1
+#!/usr/bin/python3.4
 #
 # Easy Python3 Dynamic DNS
 # By Jed Smith <jed@jedsmith.org> 4/29/2009
 # This code and associated documentation is released into the public domain.
 #
-# This script **REQUIRES** Python 3.0 or above.  Python 2.6 may work.
+# This script **REQUIRES** Python 3.0 or above. Python 2.6 may work.
 # To see what version you are using, run this:
 #
 #   python --version
@@ -32,25 +32,26 @@
 #                                                                    ^
 # You want 123456. The API key MUST have write access to this resource ID.
 #
-RESOURCE = "000000"
+RESOURCE = "0000000"
+DOMAINID = "000000"
 #
-# Your Linode API key.  You can generate this by going to your profile in the
-# Linode manager.  It should be fairly long.
+# Your Linode API key. You can generate this by going to your profile in the
+# Linode manager. It should be fairly long.
 #
 KEY = "abcdefghijklmnopqrstuvwxyz"
 #
 # The URI of a Web service that returns your IP address as plaintext.  You are
-# welcome to leave this at the default value and use mine.  If you want to run
-# your own, the source code of that script is:
+# welcome to leave this at the default value.  If you want to run your own,
+# you can use this script:
 #
 #     <?php
 #     header("Content-type: text/plain");
 #     printf("%s", $_SERVER["REMOTE_ADDR"]);
 #
-GETIP = "http://hosted.jedsmith.org/ip.php"
+GETIP = "http://ifconfig.me/ip"
 #
 # If for some reason the API URI changes, or you wish to send requests to a
-# different URI for debugging reasons, edit this.  {0} will be replaced with the
+# different URI for debugging reasons, edit this. {0} will be replaced with the
 # API key set above, and & will be added automatically for parameters.
 #
 API = "https://api.linode.com/api/?api_key={0}&resultFormat=JSON"
@@ -61,17 +62,17 @@ exit("Did you edit the options?  vi this file open.")
 #
 # That's it!
 #
-# Now run dyndns.py manually, or add it to cron, or whatever.  You can even have
+# Now run dyndns.py manually, or add it to cron, or whatever. You can even have
 # multiple copies of the script doing different zones.
 #
 # For automated processing, this script will always print EXACTLY one line, and
-# will also communicate via a return code.  The return codes are:
+# will also communicate via a return code. The return codes are:
 #
 #    0 - No need to update, A record matches my public IP
 #    1 - Updated record
 #    2 - Some kind of error or exception occurred
 #
-# The script will also output one line that starts with either OK or FAIL.  If
+# The script will also output one line that starts with either OK or FAIL. If
 # an update was necessary, OK will have extra information after it.
 #
 # If you want to see responses for troubleshooting, set this:
@@ -122,7 +123,7 @@ def ip():
 
 def main():
 	try:
-		res = execute("domainResourceGet", {"ResourceID": RESOURCE})["DATA"]
+		res = execute("domainResourceGet", {"ResourceID": RESOURCE, "DomainID": DOMAINID})["DATA"]
 		if(len(res)) == 0:
 			raise Exception("No such resource?".format(RESOURCE))
 		public = ip()
